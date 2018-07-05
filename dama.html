@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<title>Jogo da dama</title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			header {
+				width: 1024px;
+				height: 140px;
+				border: 3px solid #2c3e50;
+				margin: auto;
+				text-align: center;
+			}
+
+				hgroup {
+					color: #2c3e50;	
+					font-family: "Segoe UI", "Calibri";
+				}
+
+					h1 {
+						font-size: 57px;
+					}
+
+					h2 {
+						font-size: 30px;
+					}
+
+					#jogador {
+						color: #7f8c8d;
+					}
+
+					hgroup p {
+						display: none;
+					}
+
+			#container {
+				width: 1024px;
+				height: 657px;
+				border: 3px solid #2c3e50;
+				margin: auto;
+			}
+
+			table {
+				margin: 0px auto;
+				position: relative;
+			}
+
+				table td {
+					height: 80px;
+					width: 100px;
+					text-align: center;
+					background-color: #fffff;
+				}
+				
+				#descarte1{
+				position:absolute;
+				color:blue;
+				height:652px;
+				width:100px;
+				left:282px;
+				top:21%;
+				border: 1px solid #000;
+				background-color:#ccc;
+				text-align:center;	
+				
+				}
+				
+				#descarte1 img, #descarte2 img{
+				height:50px;
+				width:50px;
+				}
+				
+				#descarte2{
+				color:red;
+				position:absolute;
+				height:652px;
+				width:100px;
+				right:282px;
+				top:21%;
+				border: 1px solid #000;
+				background-color:#ccc;
+				text-align:center;	
+				
+				}
+				#descarte1 p{
+				left:8px;
+				}
+				
+				#descarte1 p, #descarte2 p{
+					font-weight:bold;
+					font-size:18px;
+					position:absolute;
+					top:312px;
+					font-family: "Segoe UI", "Calibri";
+					text-align:center;
+					
+				}
+				
+				
+		</style>
+
+		<script type="text/javascript">
+			
+			var tabela = [ 
+				["","","","","","","",""], 
+				["","","","","","","",""],
+				["","","","","","","",""],
+				["","","","","","","",""],
+				["","","","","","","",""],
+				["","","","","","","",""],
+				["","","","","","","",""],
+				["","","","","","","",""]
+				];
+
+			for(var i = 0; i < 8; i++){
+				for(var x = 0; x < 8; x++){
+					tabela[i][x] = 9;
+				}				
+			}
+
+			var tabuleiro = document.getElementsByTagName("TD");
+
+			function criaTabuleiro(){
+				//var tabuleiro = document.getElementById('tabuleiro');
+				var qtdinicio = 1;
+				var qtdoito = 0;
+				var linha = 0;
+				var coluna = 0;
+				
+				var jogador	 = document.getElementById('jogador');
+				
+				var rand = Math.round(Math.random() * 1, 0)
+				
+				if(rand == 1){
+					jogador.innerHTML = "Vermelho"
+				} else {
+					jogador.innerHTML = "Azul"
+				}
+				
+				for (var i = 0; i < tabuleiro.length; i++){
+					
+					// Verifica quando mudar de linha
+					if (qtdoito == 8) {
+						qtdoito = 0;
+						qtdinicio++;
+						linha++;
+						coluna = 0;
+					}
+
+					if (qtdinicio % 2 != 0) {
+						if (i % 2 == 0) {
+							tabuleiro[i].style.background = "#000";
+							// Preche a tabela de acordo com a cor
+							preencheTabela(linha, coluna, i, "1"); 
+						} else {
+							preencheTabela(linha, coluna, i, "0"); 
+						}
+					} else {
+						if (i % 2 != 0) {
+							tabuleiro[i].style.background = "#000";
+							preencheTabela(linha, coluna, i, "1");
+						} else { 
+							preencheTabela(linha, coluna, i, "0"); 
+						}
+					}
+					qtdoito++;
+					coluna++;
+				};
+			}
+
+			function preencheTabela(linha, coluna, filho, condicao){
+				// Função para preencher o tabuleiro com as peças
+
+				// verifica qual não deve ser preenchido
+				// condicao == 1 - posição onde as peças vão ser posicionadas
+				if (condicao == "1") {
+					if ( (linha != 3 || linha != 4) && linha < 3) {
+						tabela[linha][coluna] = 1;
+						tabuleiro[filho].innerHTML = "<img id='V"+filho+"' height='60' width='60' src='jogador1.png' draggable='true' ondragstart='inicio(event)'>";
+					}
+
+					if ( (linha != 3 || linha != 4) && linha > 4) {
+						tabela[linha][coluna] = -1;
+						tabuleiro[filho].innerHTML = "<img id='A"+filho+"' height='60' width='60' src='jogador2.png' draggable='true' ondragstart='inicio(event)'>"
+					}
+				} else {
+					tabela[linha][coluna] = 8;
+				}
+
+			}
+
+		</script>
+	</head>
+	<body onload="criaTabuleiro()">
+		<header>
+			<hgroup>
+				<h1>Dama</h1>
+				<h2>Jogador <span id="jogador"></span></h2>
+				<p id="erro" style="color: rgb(255,0,0); font-weight: bold;"></p>
+			</hgroup>
+		</header>
+		<div id="container">
+			<table id="tabuleiro">
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 0,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 1,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 2,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 3,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 4,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 5,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 6,7)"></td>
+				</tr>
+				<tr>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,0)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,1)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,2)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,3)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,4)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,5)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,6)"></td>
+					<td ondragover="arrastado(event)" ondrop="fim(event, 7,7)"></td>
+				</tr>
+			</table>
+		</div>
+		<div id="descarte1" ondragover="arrastado(event)" ondrop="fim(event, 0, 0, 'D1')"><p>Lado Azul</p></div>
+		<div id="descarte2" ondragover="arrastado(event)" ondrop="fim(event, 0, 0, 'D2')" ><p>Lado Vermelho</p></div>	
+		
+		<script type="text/javascript">
+			function inicio(event){
+				event.dataTransfer.setData("text", event.target.id)
+			}
+
+			function arrastado(event){
+				event.preventDefault();
+			}
+
+			function fim(event, linha, coluna, remove) {
+		        event.preventDefault();
+		        var id = event.dataTransfer.getData("text");
+		        var exibe = document.getElementById("erro");
+				var jogar = document.getElementById("jogador").innerHTML;
+				var jogador;
+				
+				if(id.substring(0,1) == "V"){
+					jogador = "Vermelho";
+				} else {
+					jogador = "Azul";
+				}
+				
+				if(jogar.substring(0,1) != id.substring(0,1)) {
+					exibe.style.display = "block";
+					exibe.innerHTML = "Não é a vez do jogar " + jogador;
+					return false;
+				} else {
+					exibe.style.display = "none";
+				}
+				
+				if(remove == 'D1' || remove == 'D2'){
+					descarte(id, remove, id.substring(0,1));
+				} else{	
+				
+					// verifica se a posição é válida
+					if(tabela[linha][coluna] == 8) {
+						exibe.style.display = "block";
+						exibe.innerHTML = "Posição inválida";
+						return false;
+					} else if(event.target.id != '') {
+						exibe.style.display = "block";
+						exibe.innerHTML = "Não é permido jogar em cima de outra peça!";
+						return false;
+					}
+					else {
+						exibe.style.display = "none";
+					}
+
+					if (id.substring(0,1) == "V") {
+						 document.getElementById("jogador").innerHTML = "Azul";
+					} else {
+						 document.getElementById("jogador").innerHTML = "Vermelho";
+					}
+					 event.target.appendChild(document.getElementById(id));
+				}
+  
+		    }
+			
+			function descarte(id, remove, alvo){
+			
+				if(remove == 'D1' && alvo == 'A'){
+
+					event.target.appendChild(document.getElementById(id));
+					document.getElementById(id).setAttribute("draggable","false");
+					
+				} else if(remove == 'D2' && alvo == 'V'){
+				
+					event.target.appendChild(document.getElementById(id));
+					document.getElementById(id).setAttribute("draggable","false");
+				} else {
+					return false;
+				}
+				
+				
+			}
+			
+		</script>
+	</body>
+</html>
